@@ -1,0 +1,244 @@
+
+<!doctype html>
+<html lang="fr">
+    <head>
+        <title>CONCENTRX</title>
+		<meta charset="UTF-8">
+<meta name="description" content="Le ConcentrX de S'CAPE">
+  <meta name="keywords" content="Escape game, jeu évasion, code, crypto, puzzle circulaire, circupuzzle, concentrX">
+  <meta name="author" content="eNePe pour S'CAPE">
+
+ <script type="text/javascript">
+var r=[15,120,25,75,10,240]
+var myTimer="";
+  
+  function stop(){
+clearInterval(myTimer);
+}
+
+function tournet(angle){
+myTimer = setInterval("tourne("+angle+")", 200);
+  }
+  
+ function tourne(angle){
+r[angle]= r[angle]+5;
+if (r[angle]>360){r[angle]=r[angle]-360; }
+if (r[angle]<0){r[angle]=r[angle]+360;}
+ modiftext();
+  }
+ 
+ function tournetinv(angle){
+myTimer = setInterval("tourneinv("+angle+")", 200);
+  }
+  
+ function tourneinv(angle){
+r[angle]= r[angle]-5;
+if (r[angle]>360){r[angle]=r[angle]-360; }
+if (r[angle]<0){r[angle]=r[angle]+360;}
+ modiftext();
+  }
+ 
+function modiftext(){
+var image=document.forms["param"].url.value;
+var taille=document.forms["param"].taille.value;
+var haut=document.forms["param"].haut.value;
+var gauche=document.forms["param"].gauche.value;
+var cercle=Math.round(document.forms["param"].cercle.value);
+
+if (cercle < 3) {cercle =3;}
+if (cercle > 6) {cercle =6;}
+
+document.forms["param"].cercle.value=cercle;
+document.getElementById("contenu").innerHTML="";
+var i=cercle+1;
+var widthx = 3+((i-2)*(5/(cercle-1)));
+contenu=document.getElementById("contenu").innerHTML;
+document.getElementById("contenu").innerHTML = contenu + "<div id='display"+i+"' class='cercle ombre' style=' z-index:-1; transform: width:"+widthx+"cm; height:"+widthx+"cm;'> </div>";
+for (i=cercle;i>0;i--) {
+var widthx = 3+((i-1)*(5/(cercle-1)));
+contenu=document.getElementById("contenu").innerHTML;
+document.getElementById("contenu").innerHTML = contenu + "<div id='display"+i+"' class='cercle' style=' z-index:-1; transform: rotate("+r[i]+"deg);width:"+widthx+"cm; height:"+widthx+"cm;'> </div>";
+}
+
+contenu=document.getElementById("contenu").innerHTML;
+document.getElementById("contenu").innerHTML = contenu + "<div id='fleches'></div>";
+
+for (i=1;i<cercle+1;i++) {
+var x=gauche-(((cercle+1)-i)*(5/((cercle-1)*2)));
+var y=haut-(((cercle+1)-i)*(5/((cercle-1)*2)));
+document.getElementById("display"+i).innerHTML = "<img  src='"+image+"' style='width:"+taille+"cm;top:"+y+"cm; left:"+x+"cm;'>";
+}
+for (i=cercle;i>0;i--)  {
+var widthx = 3+((i-1)*(5/(cercle-1)));
+var posbas = (widthx/2)-0.75;
+fleches=document.getElementById("fleches").innerHTML;
+document.getElementById("fleches").innerHTML = fleches+"<div id='fleche"+i+"' class='cercle' style='position:absolute; width:"+widthx+"cm; height:"+widthx+"cm;'><div class='horaire' onclick='tourne("+i+")' onmouseout='stop();' onmouseup='stop();' onmousedown='tournet("+i+")' style='bottom:"+posbas+"cm;'></div><div  onclick='tourneinv("+i+")' onmouseout='stop();' onmouseup='stop();' onmousedown='tournetinv("+i+")' style='bottom:"+posbas+"cm;' class='antihoraire'></div></div>";
+}
+
+
+var test=0;
+for (j=1;j<cercle;j++) {
+if (r[j]===r[cercle]) {test=test+1;}
+}
+if (test==cercle-1) {document.getElementById("reponse").innerHTML ='';document.getElementById("fleches").style.display="none";}
+}
+
+function refuserToucheEntree(event) 
+{ 
+// Compatibilité IE / Firefox 
+if(!event && window.event) { 
+event = window.event; 
+} 
+// IE 
+if(event.keyCode == 13) { 
+event.returnValue = false; 
+event.cancelBubble = true; 
+} 
+// DOM 
+if(event.which == 13) { 
+event.preventDefault(); 	
+event.stopPropagation(); 
+} 
+}
+</script>
+
+<style type="text/css">	
+	
+	
+	
+	
+	
+html, body{
+	overflow:hidden;
+position:relative;
+margin:0;
+padding:0;
+}
+
+.cercle{
+position: absolute;
+margin: auto;
+-moz-border-radius: 100%;
+-webkit-border-radius: 100%;
+border-radius: 100%;
+/*border: dashed 1px blue;*/
+top:0;left:0;right:0;bottom:0;
+	        
+}	
+
+#contenu{
+width: 8cm;
+height: 8cm;
+position: relative;
+margin: auto;
+margin-top:20px;
+top:0px;left:0;right:0;}
+
+
+form{
+	display:none;
+	font-size:12px;
+	font-family: arial,sans-serif;
+	text-align: center;
+	margin-bottom: 50px;
+	margin-top: 10px;
+}
+
+label {
+	margin-left: 5px;
+}
+input[type=number] {
+	width: 50px;
+}
+
+#outils img{
+vertical-align: middle;
+margin-left: 20px;
+}
+
+
+.cercle img{
+position: absolute;
+background-color:white;
+}
+
+.cercle{
+overflow: hidden;
+}
+.horaire{
+	position: absolute;
+	width: 0.35cm;
+	height: 1.5cm;
+	background-image: url('https://scape.enepe.fr/ressources/ccxi/dextre.png');
+	background-size: 100%;
+	background-repeat: no-repeat;
+	left:0.15cm;
+	cursor: pointer;
+}
+.antihoraire{
+	position: absolute;
+	width: 0.35cm;
+	height: 1.5cm;
+	background-image: url('https://scape.enepe.fr/ressources/ccxi/senestre.png');
+	background-size: 100%;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	right:0.15cm;
+}
+#fleches{
+	position:absolute;
+	width: 8cm;
+	height: 8cm;
+	top:0;right:0;bottom:0;left:0;
+	padding: 0; margin:auto;
+}
+
+#reponse{
+z-index:1;
+margin-top: 20px;
+width: 100%;
+text-align: center;
+}
+.ombre{
+	opacity: 0.8;
+	filter: alpha(opacity=80);
+	zoom: 1;
+-moz-box-shadow: 4px 4px 10px 0px #343434;
+-webkit-box-shadow: 4px 4px 10px 0px #343434;
+-o-box-shadow: 4px 4px 10px 0px #343434;
+box-shadow: 4px 4px 10px 0px #343434;
+filter:progid:DXImageTransform.Microsoft.Shadow(color=#343434, Direction=134, Strength=10);
+}
+
+</style>		
+	</head>
+<body onload="modiftext()"  onclick='stop();'>
+
+<div id="outils">
+<form name="param" onKeyPress="if(event.keyCode == 13) refuserToucheEntree(event);modiftext();">
+<label for="code">Chemin de l'image en ligne  </label>
+<input type="text" id="url" name="url" value="https://s3.eu-west-1.amazonaws.com/genial.ly/5cac67e060a5430fcb68e053/9cc2c63b-3e8c-4a62-9d57-f86b008413e6.png" onChange="modiftext();">
+<label for="haut">Taille de l'image (cm)</label>
+<input type="number" id="taille" name="taille" value="9" step="0.5" min="1" max="25" onChange="modiftext();">
+<label for="gauche">Décalage gauche (cm)</label>
+<input type="number" id="gauche" name="gauche" value="0.0" step="0.5" min="-20" max="20" onChange="modiftext();">
+<label for="haut">Décalage haut (cm) / valeur par défaut :-0.5</label>
+<input type="number" id="haut" name="haut" value="0.0" step="0.5" min="-20" max="20" onChange="modiftext();">
+<label for="haut">Nombre de cercles</label>
+<input type="number" id="cercle" name="cercle" value="5" step="1" min="3" max="6" onChange="modiftext();">
+<label for="msg">Message</label>
+<input type="text" id="msg" name="msg" value="">
+<label for="lien">Lien direct</label>
+<input type="checkbox" id="lien" name="lien" value="oui">
+</form>
+</div>
+
+<div id="contenu" >
+</div>
+
+<div id="reponse" >
+</div>
+
+
+</body>
+</html>
